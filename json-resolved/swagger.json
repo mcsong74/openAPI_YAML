@@ -1,0 +1,279 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "info title - Cybertek API documentation",
+    "description" : "info desc - OpenApi Training",
+    "contact" : {
+      "name" : "contact name - Cybertek",
+      "url" : "https://cybertekschool.com"
+    },
+    "version" : "1.0"
+  },
+  "servers" : [ {
+    "url" : "https://dev.cybertek.com",
+    "description" : "server desc - Development Server"
+  }, {
+    "url" : "https://qa.dev.cybertek.com",
+    "description" : "server desc - QA Server"
+  }, {
+    "url" : "https://prod.cybertek.com",
+    "description" : "server desc - Production Server"
+  } ],
+  "paths" : {
+    "/v1/courses" : {
+      "get" : {
+        "tags" : [ "Courses" ],
+        "summary" : "List Courses",
+        "description" : "GET a list of courses in the cybertek",
+        "parameters" : [ {
+          "name" : "courseId",
+          "in" : "query",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of courses"
+          },
+          "400" : {
+            "description" : "No course found"
+          }
+        }
+      }
+    },
+    "/v1/students" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "List of students",
+        "description" : "Get all students",
+        "responses" : {
+          "200" : {
+            "description" : "List of Students",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StudentList"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "No student found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Students" ],
+        "summary" : "New Student",
+        "description" : "Create a new student",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Student"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Student created successfully",
+            "headers" : {
+              "Location" : {
+                "description" : "Location of the created student",
+                "style" : "simple",
+                "explode" : false,
+                "schema" : {
+                  "type" : "string",
+                  "format" : "url",
+                  "example" : "https//example.com/v1/students/{studentId}"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Student creation unsuccess!"
+          }
+        }
+      }
+    },
+    "/v1/students/{studentId}" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "Students by Id",
+        "description" : "Get a single student by matching Id",
+        "parameters" : [ {
+          "name" : "studentId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "student by id",
+            "content" : {
+              "application/jsong" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "No Studnet found"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Students" ],
+        "summary" : "Update Student by Id",
+        "description" : "Update student info by matching id",
+        "parameters" : [ {
+          "name" : "studentId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Student"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Student info updated!",
+            "content" : {
+              "application/jsong" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Student info update unsuccessful!"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Delete Student by Id",
+        "description" : "Delete student info by matching id",
+        "parameters" : [ {
+          "name" : "studentId",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Student deleted!",
+            "content" : {
+              "application/jsong" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request!"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "409" : {
+            "description" : "Conflict"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Address" : {
+        "type" : "object",
+        "properties" : {
+          "street" : {
+            "type" : "string",
+            "example" : "7423 Jones Branch Dr."
+          },
+          "city" : {
+            "type" : "string",
+            "example" : "Mclean"
+          },
+          "zipCode" : {
+            "maxLength" : 5,
+            "minLength" : 5,
+            "type" : "integer",
+            "example" : 12341
+          },
+          "state" : {
+            "type" : "string",
+            "enum" : [ "VA", "NY", "TX", "CA", "PA" ]
+          }
+        },
+        "description" : "address object"
+      },
+      "Student" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "readOnly" : true
+          },
+          "firstName" : {
+            "maxLength" : 100,
+            "minLength" : 2,
+            "type" : "string",
+            "example" : "Mike"
+          },
+          "lastName" : {
+            "maxLength" : 100,
+            "minLength" : 2,
+            "type" : "string",
+            "example" : "Smith"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          }
+        },
+        "description" : "Student object"
+      },
+      "StudentList" : {
+        "type" : "array",
+        "description" : "list of Student objects",
+        "items" : {
+          "$ref" : "#/components/schemas/Student"
+        }
+      }
+    }
+  }
+}
